@@ -1,4 +1,5 @@
 const colors = require("tailwindcss/colors");
+const plugin = require('tailwindcss/plugin');
 
 module.exports = {
   mode: "jit",
@@ -48,10 +49,31 @@ module.exports = {
         "whitney": ["Whitney Medium", "sans-serif"],
         "whitney-bold": ["Whitney Semibold Regular", "sans-serif"],
       },
+      scrollPad: {
+        2: "2rem",
+        4: "4rem"
+      }
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
+  plugins: [
+    require("@tailwindcss/typography"), 
+    require("@tailwindcss/forms"),
+    plugin(function({ addUtilities, theme, e }) {
+      const values = theme("scrollPad");
+
+      const utils = ["", "top", "bottom", "left", "right"].map(side => Object.entries(values).map(([key, value]) => {
+          return  {
+            [`.${e(`scroll-pad${side == "" ? null : `-${side}`}-${key}`)}`]: {
+              [`${e(`scroll-pad${side == "" ? null : `-${side}`}`)}`]: value
+            },
+          };
+      }));
+
+      addUtilities(utils)
+
+    }),
+  ],
 };
