@@ -4,7 +4,7 @@ import HyperlinkIcon from "../icons/Hyperlink";
 
 function getText(node: React.ReactNode): string {
   if (typeof node === "string") {
-    return node.toLowerCase().replaceAll(" ", "-");
+    return node.toLowerCase().replace(/ /g, "-");
   }
 
   if (typeof node === "number") {
