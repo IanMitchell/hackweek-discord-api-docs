@@ -50,7 +50,7 @@ module.exports = {
         "whitney-bold": ["Whitney Semibold Regular", "sans-serif"],
       },
       animation: {
-        "fade-in-out": "fadeIn 80ms ease-in",
+        "fade-in-out": "fadeIn 75ms ease-in",
       },
       keyframes: {
         fadeIn: {
