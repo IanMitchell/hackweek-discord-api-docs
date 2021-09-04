@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { isValidElement, useState } from "react";
+import React, { isValidElement } from "react";
 import HyperlinkIcon from "../icons/Hyperlink";
 
 function getText(node: React.ReactNode): string {
