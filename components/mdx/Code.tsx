@@ -176,17 +176,17 @@ export default function Code({
                   </div>
                 );
               })}
-              {hasCopy && (
-                <div className="copy-button absolute bottom-1 right-2 hidden p-3 transition md:block">
-                  <CopyButton text={children}>
-                    <CopyIcon class="w-5" />
-                  </CopyButton>
-                </div>
-              )}
             </code>
           </pre>
         )}
       </Highlight>
+      {hasCopy && (
+        <div className="copy-button absolute bottom-4 right-2 hidden p-3 transition md:block">
+          <CopyButton text={children}>
+            <CopyIcon className="w-5" />
+          </CopyButton>
+        </div>
+      )}
     </div>
   );
 }
