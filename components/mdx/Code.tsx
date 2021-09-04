@@ -74,7 +74,7 @@ export default function Code({
     breakWords = true;
   }
 
-  const hasCopy = props.copy || language === "copy";
+  const hasCopy = /*props.copy || language === "copy"*/ true;
   const isTerminal = props.terminal || language === "terminal";
   const hasLines = file != null || props.lines;
 
@@ -83,7 +83,7 @@ export default function Code({
   );
 
   return (
-    <div className="code-block relative my-6 font-mono rounded-md">
+    <div className="code-block relative my-3 font-mono rounded-md">
       <InfoBar fileName={file} language={language} />
       <Highlight {...defaultProps} code={children} language={language}>
         {({
@@ -99,13 +99,6 @@ export default function Code({
               blockClassName
             )}
           >
-            {(props.copy || language === "copy") && (
-              <div className="copy-button">
-                <CopyButton text={children}>
-                  <CopyIcon />
-                </CopyButton>
-              </div>
-            )}
             <code className="p-4 rounded-md">
               {cleanTokens(tokens).map((line, i) => {
                 const lineClass = {};
@@ -183,6 +176,13 @@ export default function Code({
                   </div>
                 );
               })}
+              {hasCopy && (
+                <div className="copy-button absolute bottom-1 right-2 hidden p-3 transition md:block">
+                  <CopyButton text={children}>
+                    <CopyIcon class="w-5" />
+                  </CopyButton>
+                </div>
+              )}
             </code>
           </pre>
         )}

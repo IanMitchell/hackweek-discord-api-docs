@@ -1,3 +1,11 @@
 abbr[title].no-underline {
   text-decoration: none;
 }
+
+code .copy-button {
+  opacity: 0;
+}
+
+code:hover .copy-button {
+  opacity: 100;
+}
