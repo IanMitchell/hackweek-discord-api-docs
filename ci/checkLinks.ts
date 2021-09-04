@@ -159,19 +159,9 @@ function printResults(resultMap: Map<string, github.AnnotationProperties[]>): vo
 
 function annotateResults(resultMap: Map<string, github.AnnotationProperties[]>): void {
   let total = 0;
-  const allResults = resultMap.values();
-  let semitotal = 0;
-  let group = false;
-  for (const result of resultMap.values()) {
-    semitotal += result.length;
-    if (semitotal > 10) {
-      group = true;
-      break;
-    }
-  }
   for (const [resultFile, resultArr] of resultMap) {
     if (resultArr.length <= 0) continue;
-    if (group) github.startGroup(resultFile);
+    github.startGroup(resultFile);
     for (const result of resultArr) {
       total += 1;
       console.log(
@@ -179,7 +169,7 @@ function annotateResults(resultMap: Map<string, github.AnnotationProperties[]>):
           `col=${result.startColumn},endColumn=${result.endColumn}::${result.title}`
         );
     }
-    if (group) github.endGroup();
+    github.endGroup();
   }
   if (total > 0) {
     github.setFailed('One or more links are invalid!');
