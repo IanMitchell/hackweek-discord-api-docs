@@ -1,5 +1,6 @@
 const colors = require("tailwindcss/colors");
 
+/** @type {Parameters<import('tailwindcss')>[0]} */
 module.exports = {
   mode: "jit",
   purge: [
@@ -48,10 +49,21 @@ module.exports = {
         "whitney": ["Whitney Medium", "sans-serif"],
         "whitney-bold": ["Whitney Semibold Regular", "sans-serif"],
       },
+      animation: {
+        "fade-in-out": "fadeIn 80ms ease-in",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      animation: ["motion-safe"],
+    },
   },
   plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
 };
