@@ -6,7 +6,7 @@ interface CopyButtonProps {
   children: React.ReactNode;
 }
 
-export default function CopyButton ({ text, children }: CopyButtonProps) {
+export default function CopyButton({ text, children }: CopyButtonProps) {
   const { copy, status } = useClipboard(text);
   let value = children;
 
