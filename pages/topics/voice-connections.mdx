@@ -4,7 +4,7 @@ Voice connections operate in a similar fashion to the [Gateway](/topics/gateway#
 
 ## Voice Gateway Versioning
 
-To ensure that you have the most up-to-date information, please use [version 4](#voice-gateway-versioning-gateway-versions). Otherwise, we cannot guarantee that the [Opcodes](/topics/opcodes-and-status-codes#voice) documented here will reflect what you receive over the socket.
+To ensure that you have the most up-to-date information, please use [version 4](#gateway-versions). Otherwise, we cannot guarantee that the [Opcodes](/topics/opcodes-and-status-codes#voice) documented here will reflect what you receive over the socket.
 
 ###### Gateway Versions
 
@@ -57,10 +57,10 @@ With this information, we can move on to establishing a voice WebSocket connecti
 <Alert type="info">
 
 Bot users respect the voice channel's user limit, if set. When the voice channel is full, you will not receive
+the Voice State Update or Voice Server Update events in response to your own Voice State Update. Having `MANAGE_CHANNELS`
+permission bypasses this limit and allows you to join regardless of the channel being full or not.
 
 </Alert>
-> the Voice State Update or Voice Server Update events in response to your own Voice State Update. Having `MANAGE_CHANNELS`
-> permission bypasses this limit and allows you to join regardless of the channel being full or not.
 
 ## Establishing a Voice Websocket Connection
 
@@ -282,7 +282,7 @@ If successful, the Voice server will respond with an [Opcode 9 Resumed](/topics/
 }
 ```
 
-If the resume is unsuccessful—for example, due to an invalid session—the WebSocket connection will close with the appropriate [close event code](/topics/opcodes-and-status-codes#voice-voice-close-event-codes). You should then follow the [Connecting](#connecting-to-voice) flow to reconnect.
+If the resume is unsuccessful—for example, due to an invalid session—the WebSocket connection will close with the appropriate [close event code](/topics/opcodes-and-status-codes#voice-close-event-codes). You should then follow the [Connecting](#connecting-to-voice) flow to reconnect.
 
 #### IP Discovery
 

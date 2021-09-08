@@ -14,8 +14,8 @@ Represents a sticker that can be sent in messages.
 | description | ?string                                    | description of the sticker                                                                                                                                           |
 | tags        | string                                     | for guild stickers, the Discord name of a unicode emoji representing the sticker's expression. for standard stickers, a comma-separated list of related expressions. |
 | asset       | string                                     | **Deprecated** previously the sticker asset hash, now an empty string                                                                                                |
-| type        | integer                                    | [type of sticker](#sticker-object-sticker-types)                                                                                                                     |
-| format_type | integer                                    | [type of sticker format](#sticker-object-sticker-format-types)                                                                                                       |
+| type        | integer                                    | [type of sticker](#sticker-types)                                                                                                                                    |
+| format_type | integer                                    | [type of sticker format](#sticker-format-types)                                                                                                                      |
 | available?  | boolean                                    | whether this guild sticker can be used, may be false due to loss of Server Boosts                                                                                    |
 | guild_id?   | snowflake                                  | id of the guild that owns this sticker                                                                                                                               |
 | user?       | [user](/resources/user#user-object) object | the user that uploaded the guild sticker                                                                                                                             |
@@ -58,11 +58,11 @@ The smallest amount of data required to render a sticker. A partial sticker obje
 
 ###### Sticker Item Structure
 
-| Field       | Type      | Description                                                    |
-| ----------- | --------- | -------------------------------------------------------------- |
-| id          | snowflake | id of the sticker                                              |
-| name        | string    | name of the sticker                                            |
-| format_type | integer   | [type of sticker format](#sticker-object-sticker-format-types) |
+| Field       | Type      | Description                                     |
+| ----------- | --------- | ----------------------------------------------- |
+| id          | snowflake | id of the sticker                               |
+| name        | string    | name of the sticker                             |
+| format_type | integer   | [type of sticker format](#sticker-format-types) |
 
 ### Sticker Pack Object
 
@@ -94,13 +94,19 @@ Represents a pack of standard stickers.
 }
 ```
 
+## Endpoints
+
 <RouteHeader method="GET" url="/stickers/{sticker.id}">
   Get Sticker
 </RouteHeader>
 
 Returns a [sticker](#sticker-object) object for the given sticker ID.
 
-<RouteHeader method="GET" url="/sticker-packs">
+<RouteHeader
+  method="GET"
+  url="/sticker-packs"
+  requestDoesNotRequireAuthorizationHeader
+>
   List Nitro Sticker Packs
 </RouteHeader>
 
@@ -124,17 +130,15 @@ Returns an array of [sticker](#sticker-object) objects for the given guild. Incl
 
 Returns a [sticker](#sticker-object) object for the given guild and sticker IDs. Includes the `user` field if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
 
-<RouteHeader method="POST" url="/guilds/{guild.id}/stickers">
+<RouteHeader
+  method="POST"
+  url="/guilds/{guild.id}/stickers"
+  supportsXAuditLogHeader
+>
   Create Guild Sticker
 </RouteHeader>
 
 Create a new sticker for the guild. Send a `multipart/form-data` body. Requires the `MANAGE_EMOJIS_AND_STICKERS` permission. Returns the new [sticker](#sticker-object) object on success.
-
-<Alert type="info">
-
-This endpoint supports the `X-Audit-Log-Reason` header.
-
-</Alert>
 
 ###### Form Params
 
@@ -145,7 +149,11 @@ This endpoint supports the `X-Audit-Log-Reason` header.
 | tags        | string        | the Discord name of a unicode emoji representing the sticker's expression (2-200 characters) |
 | file        | file contents | the sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB             |
 
-<RouteHeader method="PATCH" url="/guilds/{guild.id}/stickers/{sticker.id}">
+<RouteHeader
+  method="PATCH"
+  url="/guilds/{guild.id}/stickers/{sticker.id}"
+  supportsXAuditLogHeader
+>
   Modify Guild Sticker
 </RouteHeader>
 
@@ -157,12 +165,6 @@ All parameters to this endpoint are optional.
 
 </Alert>
 
-<Alert type="info">
-
-This endpoint supports the `X-Audit-Log-Reason` header.
-
-</Alert>
-
 ###### JSON Params
 
 | Field       | Type    | Description                                                                                  |
@@ -171,14 +173,12 @@ This endpoint supports the `X-Audit-Log-Reason` header.
 | description | ?string | description of the sticker (2-100 characters)                                                |
 | tags        | string  | the Discord name of a unicode emoji representing the sticker's expression (2-200 characters) |
 
-<RouteHeader method="DELETE" url="/guilds/{guild.id}/stickers/{sticker.id}">
+<RouteHeader
+  method="DELETE"
+  url="/guilds/{guild.id}/stickers/{sticker.id}"
+  supportsXAuditLogHeader
+>
   Delete Guild Sticker
 </RouteHeader>
 
 Delete the given sticker. Requires the `MANAGE_EMOJIS_AND_STICKERS` permission. Returns `204 No Content` on success.
-
-<Alert type="info">
-
-This endpoint supports the `X-Audit-Log-Reason` header.
-
-</Alert>

@@ -6,11 +6,11 @@ interface ContentWrapperProps {
 
 export default function ContentWrapper({ children }: ContentWrapperProps) {
   return (
-    <main className="relative flex flex-1 flex-col items-center focus:outline-none overflow-y-auto">
+    <div className="scroll-pt-16 md:scroll-pt-0 relative flex flex-1 flex-col items-center focus:outline-none overflow-y-auto">
       <Header />
-      <div className="pt-4 px-4 w-full max-w-6xl sm:pt-0 sm:px-6 lg:px-10">
-        <article className="m-auto">{children}</article>
-      </div>
-    </main>
+      <main className="p-4 w-full max-w-6xl sm:pb-6 sm:pt-0 sm:px-6 lg:pb-10 lg:px-10">
+        <article className="m-auto mt-0 md:mt-4">{children}</article>
+      </main>
+    </div>
   );
 }

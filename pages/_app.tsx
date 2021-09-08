@@ -6,7 +6,10 @@ import OpenGraph from "../components/OpenGraph";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
 import MenuContext from "../contexts/MenuContext";
-import "tailwindcss/tailwind.css";
+import { ThemeProvider } from "next-themes";
+import "../stylesheets/tailwind.css";
+import "../stylesheets/styles.css";
+import "../stylesheets/scrollbar.css";
 import "../stylesheets/whitney/whitney.css";
 import "../stylesheets/prism.css";
 import "../stylesheets/youtube.css";
@@ -26,17 +29,22 @@ export default function App({ Component, pageProps }: AppProps) {
   );
 
   return (
-    <MenuContext.Provider value={{ open: sidebarOpen, setOpen, setClose }}>
-      <MDX>
-        <OpenGraph />
-        <div className="flex h-screen dark:bg-background-dark bg-white overflow-hidden">
-          <div className={fadeClasses} onClick={() => setSidebarOpen(false)} />
-          <Menu />
+    <ThemeProvider defaultTheme="system" attribute="class">
+      <MenuContext.Provider value={{ open: sidebarOpen, setOpen, setClose }}>
+        <MDX>
+          <OpenGraph />
+          <div className="flex h-screen dark:bg-background-dark bg-white overflow-hidden">
+            <div
+              className={fadeClasses}
+              onClick={() => setSidebarOpen(false)}
+            />
+            <Menu />
 
-          <Component {...pageProps} />
-        </div>
-        <Footer />
-      </MDX>
-    </MenuContext.Provider>
+            <Component {...pageProps} />
+          </div>
+          <Footer />
+        </MDX>
+      </MenuContext.Provider>
+    </ThemeProvider>
   );
 }

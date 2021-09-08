@@ -11,7 +11,7 @@ Used to represent a webhook.
 | Field           | Type                                                        | Description                                                                                              |
 | --------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | id              | snowflake                                                   | the id of the webhook                                                                                    |
-| type            | integer                                                     | the [type](#webhook-object-webhook-types) of the webhook                                                 |
+| type            | integer                                                     | the [type](#webhook-types) of the webhook                                                                |
 | guild_id?       | ?snowflake                                                  | the guild id this webhook is for, if any                                                                 |
 | channel_id      | ?snowflake                                                  | the channel id this webhook is for, if any                                                               |
 | user?           | [user](/resources/user#user-object) object                  | the user this webhook was created by (not returned when getting a webhook with its token)                |
@@ -97,11 +97,13 @@ Used to represent a webhook.
 }
 ```
 
+## Endpoints
+
 <RouteHeader method="POST" url="/channels/{channel.id}/webhooks">
   Create Webhook
 </RouteHeader>
 
-Create a new webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns a [webhook](#webhook-object) object on success. Webhook names follow our naming restrictions that can be found in our [Usernames and Nicknames](/resources/user#usernames-and-nicknamest) documentation, with the following additional stipulations:
+Create a new webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns a [webhook](#webhook-object) object on success. Webhook names follow our naming restrictions that can be found in our [Usernames and Nicknames](/resources/user#usernames-and-nicknames) documentation, with the following additional stipulations:
 
 - Webhook names cannot be: 'clyde'
 
@@ -130,7 +132,11 @@ Returns a list of guild [webhook](#webhook-object) objects. Requires the `MANAGE
 
 Returns the new [webhook](#webhook-object) object for the given id.
 
-<RouteHeader method="GET" url="/webhooks/{webhook.id}/{webhook.token}">
+<RouteHeader
+  method="GET"
+  url="/webhooks/{webhook.id}/{webhook.token}"
+  requestDoesNotRequireAuthorizationHeader
+>
   Get Webhook with Token
 </RouteHeader>
 
@@ -156,7 +162,11 @@ All parameters to this endpoint are optional
 | avatar     | ?[image data](/reference#image-data) | image for the default webhook avatar               |
 | channel_id | snowflake                            | the new channel id this webhook should be moved to |
 
-<RouteHeader method="PATCH" url="/webhooks/{webhook.id}/{webhook.token}">
+<RouteHeader
+  method="PATCH"
+  url="/webhooks/{webhook.id}/{webhook.token}"
+  requestDoesNotRequireAuthorizationHeader
+>
   Modify Webhook with Token
 </RouteHeader>
 
@@ -168,13 +178,21 @@ Same as above, except this call does not require authentication, does not accept
 
 Delete a webhook permanently. Requires the `MANAGE_WEBHOOKS` permission. Returns a 204 NO CONTENT response on success.
 
-<RouteHeader method="DELETE" url="/webhooks/{webhook.id}/{webhook.token}">
+<RouteHeader
+  method="DELETE"
+  url="/webhooks/{webhook.id}/{webhook.token}"
+  requestDoesNotRequireAuthorizationHeader
+>
   Delete Webhook with Token
 </RouteHeader>
 
 Same as above, except this call does not require authentication.
 
-<RouteHeader method="POST" url="/webhooks/{webhook.id}/{webhook.token}">
+<RouteHeader
+  method="POST"
+  url="/webhooks/{webhook.id}/{webhook.token}"
+  requestDoesNotRequireAuthorizationHeader
+>
   Execute Webhook
 </RouteHeader>
 
@@ -194,9 +212,11 @@ For a `file` attachment, the `Content-Disposition` subpart header MUST contain a
 
 This endpoint supports both `application/json` and `multipart/form-data` bodies. When uploading files the `multipart/form-data` content type must be used.
 
+Note that in multipart form data, the `embed` and `allowed_mentions` fields cannot be used. You can pass a stringified JSON body as a form value as `payload_json` instead.
+
+**If you supply a `payload_json` form value, all fields except for `file` fields will be ignored in the form data**.
+
 </Alert>
-> Note that in multipart form data, the `embed` and `allowed_mentions` fields cannot be used. You can pass a stringified JSON body as a form value as `payload_json` instead.
-> **If you supply a `payload_json` form value, all fields except for `file` fields will be ignored in the form data**.
 
 ###### Query String Params
 
@@ -214,9 +234,9 @@ This endpoint supports both `application/json` and `multipart/form-data` bodies.
 | avatar_url       | string                                                                          | override the default avatar of the webhook   | false                        |
 | tts              | boolean                                                                         | true if this is a TTS message                | false                        |
 | file             | file contents                                                                   | the contents of the file being sent          | one of content, file, embeds |
-| embeds           | array of up to 10 [embed](/resources/channel#embed-object) objects              | embedded `rich` content                      | one of content, file, embeds |
+| embeds           | array of up to 10 [embed](/resources/message#embed-object) objects              | embedded `rich` content                      | one of content, file, embeds |
 | payload_json     | string                                                                          | JSON encoded body of non-file params         | `multipart/form-data` only   |
-| allowed_mentions | [allowed mention object](/resources/channel#allowed-mentions-object)            | allowed mentions for the message             | false                        |
+| allowed_mentions | [allowed mention object](/resources/message#allowed-mentions-object)            | allowed mentions for the message             | false                        |
 | components\*     | array of [message component](/interactions/message-components#component-object) | the components to include with the message   | false                        |
 
 \* Requires an application-owned webhook
@@ -227,7 +247,11 @@ For the webhook embed objects, you can set every field except `type` (it will be
 
 </Alert>
 
-<RouteHeader method="POST" url="/webhooks/{webhook.id}/{webhook.token}/slack">
+<RouteHeader
+  method="POST"
+  url="/webhooks/{webhook.id}/{webhook.token}/slack"
+  requestDoesNotRequireAuthorizationHeader
+>
   Execute Slack-Compatible Webhook
 </RouteHeader>
 
@@ -239,7 +263,11 @@ Refer to [Slack's documentation](https://api.slack.com/incoming-webhooks) for mo
 | ----- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | wait  | boolean | waits for server confirmation of message send before response (defaults to `true`; when `false` a message that is not saved does not return an error) | false    |
 
-<RouteHeader method="POST" url="/webhooks/{webhook.id}/{webhook.token}/github">
+<RouteHeader
+  method="POST"
+  url="/webhooks/{webhook.id}/{webhook.token}/github"
+  requestDoesNotRequireAuthorizationHeader
+>
   Execute GitHub-Compatible Webhook
 </RouteHeader>
 
@@ -254,20 +282,22 @@ Add a new webhook to your GitHub repo (in the repo's settings), and use this end
 <RouteHeader
   method="GET"
   url="/webhooks/{webhook.id}/{webhook.token}/messages/{message.id}"
+  requestDoesNotRequireAuthorizationHeader
 >
   Get Webhook Message
 </RouteHeader>
 
-Returns a previously-sent webhook message from the same token. Returns a [message](/resources/channel#message-object) object on success.
+Returns a previously-sent webhook message from the same token. Returns a [message](/resources/message#message-object) object on success.
 
 <RouteHeader
   method="PATCH"
   url="/webhooks/{webhook.id}/{webhook.token}/messages/{message.id}"
+  requestDoesNotRequireAuthorizationHeader
 >
   Edit Webhook Message
 </RouteHeader>
 
-Edits a previously-sent webhook message from the same token. Returns a [message](/resources/channel#message-object) object on success.
+Edits a previously-sent webhook message from the same token. Returns a [message](/resources/message#message-object) object on success.
 
 When the `content` field is edited, the `mentions` array in the message object will be reconstructed from scratch based on the new content. The `allowed_mentions` field of the edit request controls how this happens. If there is no explicit `allowed_mentions` in the edit request, the content will be parsed with _default_ allowances, that is, without regard to whether or not an `allowed_mentions` was present in the request that originally created the message.
 
@@ -281,9 +311,11 @@ For a `file` attachment, the `Content-Disposition` subpart header MUST contain a
 
 This endpoint supports both `application/json` and `multipart/form-data` bodies. When uploading files the `multipart/form-data` content type must be used.
 
+Note that in multipart form data, the `embed`, `allowed_mentions`, and `attachments` fields cannot be used. You can pass a stringified JSON body as a form value as `payload_json` instead.
+
+**If you supply a `payload_json` form value, all fields except for `file` fields will be ignored in the form data**.
+
 </Alert>
-> Note that in multipart form data, the `embed`, `allowed_mentions`, and `attachments` fields cannot be used. You can pass a stringified JSON body as a form value as `payload_json` instead.
-> **If you supply a `payload_json` form value, all fields except for `file` fields will be ignored in the form data**.
 
 <Alert type="info">
 
@@ -296,11 +328,11 @@ All parameters to this endpoint are optional and nullable.
 | Field            | Type                                                                            | Description                                                     |
 | ---------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | content          | string                                                                          | the message contents (up to 2000 characters)                    |
-| embeds           | array of up to 10 [embed](/resources/channel#embed-object) objects              | embedded `rich` content                                         |
+| embeds           | array of up to 10 [embed](/resources/message#embed-object) objects              | embedded `rich` content                                         |
 | file             | file contents                                                                   | the contents of the file being sent/edited                      |
 | payload_json     | string                                                                          | JSON encoded body of non-file params (multipart/form-data only) |
-| allowed_mentions | [allowed mention object](/resources/channel#allowed-mentions-object)            | allowed mentions for the message                                |
-| attachments      | array of [attachment](/resources/channel#attachment-object) objects             | attached files to keep                                          |
+| allowed_mentions | [allowed mention object](/resources/message#allowed-mentions-object)            | allowed mentions for the message                                |
+| attachments      | array of [attachment](/resources/message#attachment-object) objects             | attached files to keep                                          |
 | components\*     | array of [message component](/interactions/message-components#component-object) | the components to include with the message                      |
 
 \* Requires an application-owned webhook
@@ -308,6 +340,7 @@ All parameters to this endpoint are optional and nullable.
 <RouteHeader
   method="DELETE"
   url="/webhooks/{webhook.id}/{webhook.token}/messages/{message.id}"
+  requestDoesNotRequireAuthorizationHeader
 >
   Delete Webhook Message
 </RouteHeader>
