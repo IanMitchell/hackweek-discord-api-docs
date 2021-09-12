@@ -113,7 +113,7 @@ function NavigationSubLink({ href, children }: NavigationSubLinkProps) {
   }, [router.asPath, href, setActive]);
 
   const classes = classNames(
-    "group flex items-center ml-6 px-2 py-1 w-full text-sm font-medium rounded-md",
+    "group flex items-center ml-6 px-2 py-1 w-full text-sm font-medium rounded-md motion-safe:duration-200",
     {
       "text-dark dark:text-white": isActive,
       "text-theme-light-sidebar-text hover:text-theme-light-sidebar-hover-text dark:hover:text-white":
