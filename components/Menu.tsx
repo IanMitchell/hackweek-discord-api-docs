@@ -1,15 +1,18 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useReducer, useRef } from "react";
 import classNames from "classnames";
 import Bars from "./icons/Bars";
 import Navigation from "./Navigation";
 import MenuContext from "../contexts/MenuContext";
+import SubLinkContext from "../contexts/SubLinkContext";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import { useRouter } from "next/router";
+import NavigationFollower, { updateNavReducer } from "./NavigationFollower";
 
 export default function Menu() {
   const ref = useRef(null);
   const router = useRouter();
   const { open, setClose } = useContext(MenuContext);
+  const [activeSubLink, setActiveSubLink] = useReducer(updateNavReducer, "");
 
   const classes = classNames(
     [
@@ -47,7 +50,12 @@ export default function Menu() {
               onClick={setClose}
               className="ml-6 h-7 text-black dark:text-white cursor-pointer md:hidden"
             />
-            <Navigation />
+            <SubLinkContext.Provider
+              value={{ active: activeSubLink, setActive: setActiveSubLink }}
+            >
+              <Navigation />
+              <NavigationFollower />
+            </SubLinkContext.Provider>
           </div>
         </div>
       </div>

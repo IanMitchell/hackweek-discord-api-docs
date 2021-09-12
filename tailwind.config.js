@@ -63,6 +63,7 @@ module.exports = {
   variants: {
     extend: {
       animation: ["motion-safe"],
+      transitionDuration: ["motion-safe"],
     },
   },
   plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import classNames from "classnames";
@@ -7,6 +7,7 @@ import CaretFill from "./icons/CaretFill";
 import useToggle from "../hooks/useToggle";
 import Discord from "./icons/Discord";
 import ThemeSwitcher from "./ThemeSwitcher";
+import SubLinkContext from "../contexts/SubLinkContext";
 
 interface MenuSelectionProps {
   title?: string;
@@ -48,7 +49,6 @@ function NavigationLink({
   // TODO: We currently have a bunch of listeners being added here - can this be improved?
   useEffect(() => {
     const handler = (url: string) => {
-      // debugger;
       if (url.endsWith(href) && !isOpen) {
         toggle();
       }
@@ -103,12 +103,21 @@ interface NavigationSubLinkProps {
 
 function NavigationSubLink({ href, children }: NavigationSubLinkProps) {
   const router = useRouter();
+  const { active, setActive } = useContext(SubLinkContext);
+  const isActive = active === href;
+
+  useEffect(() => {
+    if (router.asPath === href) {
+      setActive({ type: "direct", payload: href });
+    }
+  }, [router.asPath, href, setActive]);
+
   const classes = classNames(
-    "group flex items-center ml-6 px-2 py-1 w-full text-sm font-medium rounded-md",
+    "group flex items-center ml-6 px-2 py-1 w-full text-sm font-medium rounded-md motion-safe:duration-200",
     {
-      "text-dark dark:text-white": router.asPath === href,
+      "text-dark dark:text-white": isActive,
       "text-theme-light-sidebar-text hover:text-theme-light-sidebar-hover-text dark:hover:text-white":
-        router.asPath !== href,
+        !isActive,
     }
   );
 
@@ -116,9 +125,7 @@ function NavigationSubLink({ href, children }: NavigationSubLinkProps) {
     <span className="relative flex items-center ml-4">
       <Link href={href}>
         <a className={classes}>
-          {router.asPath === href ? (
-            <Caret className="absolute -ml-4 w-2 h-2" />
-          ) : null}
+          {isActive ? <Caret className="absolute -ml-4 w-2 h-2" /> : null}
           {children}
         </a>
       </Link>
